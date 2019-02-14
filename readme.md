@@ -8,7 +8,8 @@
 6. You may create a new account or login using an existing one (credentials are given below)
 7. Goto the address: localhost:8000/admin and login with superuser credentials to change the user types for testing the software.
 
-# USER LOGIN CREDENTIALS `localhost:8000/login`
+# USER LOGIN CREDENTIALS 
+`localhost:8000/login`
 
 	1. dumbape
 	2. parag_parihar
@@ -21,7 +22,8 @@
 
 	Password for all users: 123456
 
-# SUPERUSER LOGIN CREDENTIALS `localhost:8000/admin`
+# SUPERUSER LOGIN CREDENTIALS 
+`localhost:8000/admin`
 
 	1. dumbape
 
