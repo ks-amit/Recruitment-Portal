@@ -1,0 +1,51 @@
+{% load static from staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'static/semantic.min.css' %}">
+
+    <style type="text/css">
+    body {
+      background-image: url("{% static 'static/acc_bg.jpg' %}");
+      background-color: #DADADA;
+    }
+    body > .grid {
+      height: 100%;
+    }
+    .image {
+      margin-top: -100px;
+    }
+    .column {
+      max-width: 500px;
+    }
+  </style>
+  </head>
+  <body>
+    <div>
+      <div class="ui massive top fixed inverted stackable menu" style="min-height: 70px;">
+
+        <div style="margin-left: 43%; margin-top: 0.75%;">
+          <h1 class="ui huge inverted header">MCQ Test Portal</h1>
+        </div>
+
+        <div class="right menu">
+          <div class="{% block login_button %}{% endblock %} item">
+            <a href="{% url 'accounts:login' %}" class="ui inverted white button" style="width: 120px;">Login</a>
+          </div>
+          <div class="{% block signup_button %}{% endblock %} item">
+            <a href="{% url 'accounts:signup' %}" class="ui inverted white button" style="width: 120px;">Sign Up</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    {% block form %}
+
+    {% endblock %}
+
+  </body>
+</html>

@@ -1,0 +1,61 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}MCQTS - Reset Password{% endblock %}
+
+{% block form %}
+
+  <div class="ui middle aligned center aligned grid">
+    <div class="column">
+      <h1 class="ui violet huge header">
+        <div>
+          Password Reset
+        </div>
+      </h1>
+
+      {% if form %}
+
+        <form class="ui large form" method="POST" action="{% url 'accounts:reset' %}?id={{ email }}">
+          {% csrf_token %}
+
+          <div class="ui stacked segment">
+
+            <div class="field">
+              <div class="ui input">
+                {{ form.password1 }}
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui input">
+                {{ form.password2 }}
+              </div>
+            </div>
+            <button type="submit" class="ui fluid large teal submit button">Submit</button>
+          </div>
+        </form>
+      {% endif %}
+
+      {% if err %}
+          <div class="ui warning message">
+          {% for list in err %}
+
+                      {{ list }}
+                      <br>
+
+          {% endfor %}
+          </div>
+      {% endif %}
+
+      {% if success %}
+        <div class="ui success message">
+            <p>{{ success }}</p>
+        </div>
+      {% endif %}
+
+      <div class="ui message">
+        Go back to <a href="{% url 'accounts:login' %}">Login</a>
+      </div>
+
+    </div>
+  </div>
+
+{% endblock %}

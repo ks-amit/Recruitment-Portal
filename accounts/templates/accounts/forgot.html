@@ -1,0 +1,50 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}MCQTS - Forgot{% endblock %}
+
+{% block form %}
+
+  <div class="ui middle aligned center aligned grid">
+    <div class="column">
+      <h1 class="ui violet huge header">
+        <div>
+          Forgot Password
+        </div>
+      </h1>
+
+      <form class="ui large form" method="POST">
+        {% csrf_token %}
+        <div class="ui stacked segment">
+          <div class="field">
+            <div class="ui input">
+              {{ form.email }}
+            </div>
+          </div>
+          <button type="submit" class="ui fluid large teal submit button">Submit</button>
+        </div>
+      </form>
+
+      {% if err %}
+          <div class="ui warning message">
+          {% for list in err %}
+            {% for error in list %}
+                      {{ error }}
+                      <br>
+            {% endfor %}
+          {% endfor %}
+          </div>
+      {% endif %}
+
+      {% if success %}
+          <div class="ui success message">
+              <p>{{ success }}</p>
+          </div>
+      {% endif %}
+
+      <div class="ui message">
+        Go Back to <a href="{% url 'accounts:login' %}">Login</a>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

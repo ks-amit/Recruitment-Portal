@@ -1,0 +1,65 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}MCQTS - Register{% endblock %}
+
+{% block form %}
+
+    <div class="ui middle aligned center aligned grid">
+      <div class="column">
+        <h1 class="ui violet huge header">
+          <div>
+            Register for a new account
+          </div>
+        </h1>
+
+        <form class="ui large form" method="POST">
+          {% csrf_token %}
+          <div class="ui stacked segment">
+            <div class="field">
+              <div class="ui input">
+                {{ form.username }}
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui input">
+                {{ form.email }}
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui input">
+                {{ form.password1 }}
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui input">
+                {{ form.password2 }}
+              </div>
+            </div>
+            <button type="submit" class="ui fluid large teal submit button">Signup</button>
+          </div>
+        </form>
+
+        {% if err %}
+            <div class="ui warning message">
+            {% for field in form %}
+                {% if field.errors %}
+                        {{ field.errors|striptags }}
+                        <br>
+                {% endif %}
+            {% endfor %}
+            </div>
+        {% endif %}
+
+        {% if success %}
+            <div class="ui success message">
+                <p>{{ success }}</p>
+            </div>
+        {% endif %}
+
+        <div class="ui message">
+          Already a member? <a href="{% url 'accounts:login' %}">Login</a>
+        </div>
+      </div>
+    </div>
+
+{% endblock %}

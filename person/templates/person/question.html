@@ -1,0 +1,186 @@
+{% extends 'person/base.html' %}
+
+{% block title %}MCQTS - Question{% endblock %}
+
+{% block content %}
+
+    {% if status == 'C' %}
+
+        <div class="ui left rail">
+          <div class="ui segment">
+            <div class="ui header">This question was asked in
+              <div style="margin-top: 3%;"><a target="_blank" class="ui large blue basic label" href="{% url 'person:challenge' slug=problem.challenge_slug %}">{{ problem.challenge_slug }}</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {% endif %}
+
+        <h1 class="ui black huge header center aligned" style="font-size: 35px;">
+          <div class="ui mini basic message">
+            {% if status == 'A' %}
+            {{challenge_name}}
+            {% elif status == 'M' %}
+            {{challenge.name}}
+            {% elif status == 'C' %}
+              {% if editorial == 1 %}
+                QUESTION EDITORIAL
+              {% else %}
+                PRACTICE QUESTION
+              {% endif %}
+            {% endif %}
+          </div>
+        </h1>
+        <h2 class="ui black header" style="font-size: 30px;">
+          <div class="ui massive basic label">
+            {{problem.name}}
+
+          </div>
+
+        </h2>
+        {% if sub_msg %}
+        <div class="ui container enter aligned" style="width: 40%;"><div class="ui positive message">{{ sub_msg }}</div></div>
+        {% endif %}
+
+              <div class="ui stacked center aligned container">
+                <div class="ui stackable left aligned container" style="width: 95%;">
+                  <div class="ui container" style="margin-top: 3%;">
+                    <div class="ui header">
+                      Problem Statement
+                    </div>
+                    <div class="ui large input container segment" style="min-height: 300px;" style="margin-top: 1.5%;">
+                      {{ problem.statement }}
+                    </div>
+                  </div>
+
+                  {% if editorial != 1 and status == 'C' %}
+
+                  <div class="ui container right aligned">
+                    <div class="ui mini header">
+                      <a class="ui blue button" style="margin-top: 3%;" href="{% url 'person:editorial' question_slug=question_slug %}">View Editorial
+                      </a>
+                    </div>
+                  </div>
+
+                  {% endif %}
+
+                  <div class="ui container" style="margin-top: 3%;">
+                    <div class="ui medium header">
+                      Choices
+                    </div>
+                    <div class="ui container segment" style="margin-top: 1.5%;">
+                      <div class="ui container" style="margin-top: 1.5%;">
+                        <label class="ui small header">Option A</label>
+                          <div class="ui message" style="margin-top: 1.5%;">
+                            {{ problem.option1 }}
+                          </div>
+                      </div>
+                      <div class="ui container" style="margin-top: 1.5%;">
+                          <label class="ui small header">Option B</label>
+                          <div class="ui message" style="margin-top: 1.5%;">
+                            {{ problem.option2 }}
+                          </div>
+                      </div>
+                      <div class="ui container" style="margin-top: 1.5%;">
+                          <label class="ui small header">Option C</label>
+                          <div class="ui message" style="margin-top: 1.5%;">
+                            {{ problem.option3 }}
+                          </div>
+                      </div>
+                      <div class="ui container" style="margin-top: 1.5%;">
+                          <label class="ui small header">Option D</label>
+                          <div class="ui message" style="margin-top: 1.5%;">
+                            {{ problem.option4 }}
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {% if editorial == 1 %}
+
+                  <div class="ui container center aligned" style="margin-top: 1.5%;">
+                    <div class="ui mini header">EDITORIAL</div>
+                  </div>
+                  <div class="ui container left aligned segment" style="margin-top: 1.5%;">
+                    <div class="ui large message" style="min-height: 200px;">
+                      {{ problem.editorial }}
+                    </div>
+                  </div>
+
+                  {% else %}
+
+                  {% if type == 'user' %}
+                    {% if submit_success == 0 or submit_success == 1 %}
+                      {% if submit_success == 0 %}
+                        <div class="ui container center aligned">
+                          <div class="ui negative red message">YOUR ANSWER WAS INCORRECT</div>
+                          <div class="ui large positive message">CORRECT ANSWER<div class="ui large label">
+                            {% for choices in problem.answer %}
+                              {% if choices == 'A' or choices == 'B' or choices == 'C' or choices == 'D' %}
+                                {{ choices }}
+                              {% endif %}
+                            {% endfor %}
+                          </div></div>
+                        </div>
+                      {% elif submit_success == 1 %}
+                        <div class="ui container center aligned">
+                          <div class="ui positive green message">YOUR ANSWER WAS CORRECT</div>
+                          <div class="ui large positive message">ANSWER <div class="ui large label">
+                            {% for choices in problem.answer %}
+                              {% if choices == 'A' or choices == 'B' or choices == 'C' or choices == 'D' %}
+                                {{ choices }}
+                              {% endif %}
+                            {% endfor %}
+                          </div></div>
+                        </div>
+                      {% endif %}
+                    {% else %}
+                          <form class="ui large form" method="POST">
+                            {% csrf_token %}
+                            <div class="ui stacked left aligned container segment">
+                              <div class="field">
+                                <label style="font-size:16px;">
+                                  Answer(s)
+                                </label>
+
+                                <div class="ui large input" style="margin-top: 1.5%;">
+                                  {% for answers in form.answer %}
+                                  <div class="ui large label" style="margin-left: 6%;">
+                                    {{ answers }}
+                                  </div>
+                                    {% endfor %}
+                                </div>
+
+                              </div>
+                              </div>
+                              <div class="ui center aligned container">
+                                <button type="submit" class="ui large blue submit button" style="width: 25%;">
+                                  {% if status == 'A' %} Save
+                                  {% elif status == 'M' %} Save
+                                  {% elif status == 'C' %} Submit
+                                  {% endif %}
+                                </button>
+                              </div>
+                          </form>
+                      {% endif %}
+                  {% elif type == 'setter' or type == 'admin' %}
+                  <div class="ui container center aligned" style="margin-top: 1.5%;">
+                    <div class="ui info huge floating message">You are not allowed to answer this question.</div>
+                  </div>
+                  <div class="ui container center aligned" style="margin-top: 1.5%;">
+                    <div class="ui huge positive message">CORRECT ANSWER<div class="ui mini message">
+                      {% for choices in problem.answer %}
+                        {% if choices == 'A' or choices == 'B' or choices == 'C' or choices == 'D' %}
+                          {{ choices }}
+                        {% endif %}
+                      {% endfor %}
+                    </div></div>
+                  </div>
+                  {% endif %}
+
+                  {% endif %}
+                  </div>
+                </div>
+              </div>
+{% endblock %}

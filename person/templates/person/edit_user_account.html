@@ -1,0 +1,175 @@
+{% extends 'person/base.html' %}
+
+{% block title %}MCQTS - Account Details{% endblock %}
+
+{% block content %}
+
+      <div class="ui container" style="margin-top: 3%">
+
+          <h1 class="ui black huge header center aligned" style="font-size: 35px;">
+            <div>
+              USER PROFILE
+            </div>
+          </h1>
+          {% if err %}
+            <div id="fademsg" class="ui warning message">
+                          {{ err }}
+            </div>
+          {% endif %}
+          <style>
+            #myicon:hover {
+              cursor: pointer;
+            }
+          </style>
+        <form class="ui large form" method="POST" enctype='multipart/form-data'>
+                {% csrf_token %}
+                <div class="ui stackable center aligned container">
+                  <div class="ui grey header">
+                    <label>
+                      Personal Details
+                    </label>
+                  </div>
+                  {% if user_account.image %}
+                    <img style="margin-top: 3%;border-radius: 50%;" class="ui circular centered medium image" src="{{ user_account.image.url }}">
+                    <i id="myicon" style="margin-right: 8%;" onclick="document.getElementById('pro_pic').click()" class="big image large blue icon"></i>
+                    <a href="{% url 'person:profile_delete_pic' profile_slug=profile_slug %}"><i style="margin-left: 8%;" class="big trash icon"></i></a>
+                  {% endif %}
+                  <div class="ui stackable left aligned container segment" style="width: 60%;">
+                  <!-- <div class="ui stackable left aligned container segment" style="width: 60%;"> -->
+                      <div class="field">
+                        <label style="font-size:16px;">
+                          User Name
+                        </label>
+                        <div class="ui large input">
+                          {{ form.username }}
+                        </div>
+                      </div>
+
+                      <div class="field">
+                        <label style="font-size:16px;">
+                          Email Address
+                        </label>
+                        <div class="ui large input">
+                          {{ form.email }}
+                        </div>
+                      </div>
+
+                      <div class="field">
+                        <label style="font-size:16px;">
+                          First Name
+                        </label>
+                        <div class="ui large input">
+                          {{ form.firstname }}
+                        </div>
+                      </div>
+
+                      <div class="field">
+                        <label style="font-size:16px;">
+                          Last Name
+                        </label>
+                        <div class="ui large input">
+                          {{ form.lastname }}
+                        </div>
+                      </div>
+
+                      <div class="field">
+                        <label style="font-size:16px;">
+                          Contact Number
+                        </label>
+                        <div class="ui large input">
+                          {{ form.contactno }}
+                        </div>
+                      </div>
+
+                      <div class="field">
+                        <label style="font-size:16px;">
+                          Personal Bio
+                        </label>
+                        <div class="ui large input">
+                          {{ form.bio }}
+                        </div>
+                      </div>
+
+                      <div class="field">
+                        <label style="font-size:16px;">
+                          Profile Pic
+                        </label>
+                        <div id="profile_image" class="ui small input">
+                          {{ form.image }}
+                        </div>
+                      </div>
+
+                    <!-- </div> -->
+                    <div class="ui container center aligned">
+                    <button type="submit" class="ui large blue submit center aligned button" style="width: 30%;">Save Profile</button>
+                    </div>
+                </div>
+              </div>
+          </form>
+
+          <form class="ui large form" method="POST" enctype='multipart/form-data' action="{% url 'person:change_password' profile_slug=profile_slug %}">
+                {% csrf_token %}
+                <div style="margin-top:3%;" class="ui stackable center aligned container">
+                  <div class="ui grey header">
+                    <label>
+                      Change Password
+                    </label>
+                  </div>
+                  <div class="ui stackable left aligned container segment" style="width: 60%;">
+                  <!-- <div class="ui stackable left aligned container segment" style="width: 60%;"> -->
+                      <div class="field">
+                        <label style="font-size:16px;">
+                          Old Password
+                        </label>
+                        <div class="ui large input">
+                          {{ form1.oldpassword }}
+                        </div>
+                      </div>
+
+                      <div class="field">
+                        <label style="font-size:16px;">
+                          New Password
+                        </label>
+                        <div class="ui large input">
+                          {{ form1.password1 }}
+                        </div>
+                      </div>
+
+                      <div class="field">
+                        <label style="font-size:16px;">
+                            Confirm Password
+                        </label>
+                        <div class="ui large input">
+                          {{ form1.password2 }}
+                        </div>
+                      </div>
+
+                    <!-- </div> -->
+                    <div class="ui container center aligned">
+                    <button type="submit" class="ui large blue submit center aligned button" style="width: 30%;">Confirm Change Password</button>
+                    </div>
+                </div>
+              </div>
+          </form>
+
+          {% if success %}
+              <div class="ui success message">
+                  <p>{{ success }}</p>
+              </div>
+            {% endif %}
+      </div>
+      <script>
+        $(document).ready(function() {
+            // messages timeout for 10 sec 
+            setTimeout(function() {
+                $('#fademsg').fadeOut('slow');
+            }, 10000); // <-- time in milliseconds, 1000 =  1 sec
+
+            // delete message
+            $('.del-msg').live('click',function(){
+                $('.del-msg').parent().attr('style', 'display:none;');
+            })
+        });
+      </script>
+
+{% endblock %}

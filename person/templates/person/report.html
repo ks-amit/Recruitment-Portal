@@ -1,0 +1,107 @@
+{% load static from staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>MCQTS - Challenge Report</title>
+    <script type="text/javascript" src="{% static 'static/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'static/countdown/jquery.countdown.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'static/semantic.min.css' %}">
+    <link rel="stylesheet" media="screen" href="{% static 'static/semantic_icon.min.css' %}">
+    <script type="text/javascript" src="{% static 'static/semantic.min.js' %}"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.semanticui.min.js"></script>
+
+
+    <style type="text/css">
+    body {
+      background-color: #DADADA;
+    }
+    body > .grid {
+      height: 100%;
+    }
+    .image {
+      margin-top: -100px;
+    }
+    .column {
+      max-width: 500px;
+    }
+  </style>
+  </head>
+
+  <body>
+
+
+
+
+
+    <div class="ui center aligned container segment">
+
+      <div class="ui inverted vertical masthead center aligned segment">
+
+        <div class="ui inverted mini message"><h1 style="font-size: 35px;">MCQ Test Portal</h1></div>
+
+      </div>
+
+
+      <h1 class="ui black massive header center aligned" style="font-size: 35px;">
+        <div>
+          {{challenge_name}}
+        </div>
+      </h1>
+
+          {% if valid == 1 %}
+
+          <div class="ui segment" style="width:100%; min-height: 1000px;">
+            <div>
+              <label class="ui large header">PARTICIPANT DETAILS</label>
+            </div>
+            <div style="margin-top: 2%;">
+
+              <table class="ui table center aligned" style="width: 100%;">
+
+                <thead>
+                  <tr>
+                    <th style="width:15%;">RANK</th>
+                    <th>Username</th>
+                    <th>Name</th>
+                    <th>Questions Attempted</th>
+                    <th>Score</th>
+                    <th>Email</th>
+                    <th>Contact</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {% for users in leader %}
+
+                  <tr>
+                    <td> {{ users.rank }}  </td>
+                    <td> {{ users.username }} </td>
+                    <td> {{ users.name }} </td>
+                    <td> {{ users.attempted }} </td>
+                    <td> {{ users.score }} </td>
+                    <td> {{ users.email }} </td>
+                    <td> {{ users.contact }} </td>
+                  </tr>
+
+                  {% endfor %}
+                </tbody>
+
+              </table>
+
+            </div>
+          </div>
+
+          {% elif valid == 0 %}
+
+            <div class="ui center aligned container segment">
+              <div class="ui huge info floating message">This challenge had no participants</div>
+            </div>
+
+          {% endif %}
+
+      </div>
+    </div>
+  </body>

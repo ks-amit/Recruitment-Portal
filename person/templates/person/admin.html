@@ -1,0 +1,271 @@
+{% extends 'person/base.html' %}
+{% block title %} Admin  {% endblock %}
+
+{% block content %}
+
+
+<div class="ui left rail">
+
+  <div class="ui container segment center aligned">
+
+  <div class="ui segment">
+    <div class="ui small blue statistic">
+          <div class="value">
+            {{ C.questions }}
+          </div>
+          <div class="label">
+            Problems
+          </div>
+    </div>
+  </div>
+
+  <div class="ui segment">
+    <div class="ui small statistic">
+          <div class="value">
+            {{ C.challenges }}
+          </div>
+          <div class="label">
+            Challenges
+          </div>
+    </div>
+  </div>
+
+  <div class="ui segment">
+    <div class="ui small red statistic">
+          <div class="value">
+            {{ C.users }}
+          </div>
+          <div class="label">
+            Compititors
+          </div>
+    </div>
+  </div>
+
+</div>
+
+</div>
+
+<div class="ui right rail">
+
+  <div>
+
+    <div class="ui segment">
+      <div class="ui container center aligned">
+        <h1 class="ui mini grey header" style="font-size: 20px;">Ongoing Challenge</h1>
+        {% if A == None %}
+          <div class="ui large basic label center aligned" style="width: 50%;">NONE</div>
+        {% else %}
+        <div>
+          <a style="font-size: 16px;" href="{% url 'person:challenge' slug=A.slug %}" class="ui large label">{{ A.name }}</a>
+        </div>
+        <div style="font-size: 17px; margin-top: 8%;"><b>Ends In</b></div>
+        <div style="font-size: 16px; margin-top: 3%;" class="value ui large basic label" id="countdown_ongoing">
+        </div>
+        <script type="text/javascript">
+          $('#countdown_ongoing').countdown('{{ A.before_end }}', function(event) {
+            $(this).html(event.strftime('%D days %H:%M:%S'));
+            $(this).on('finish.countdown', function(){
+              location.reload();
+            });
+          });
+        </script>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="ui segment">
+      <div class="ui container center aligned">
+        <h1 class="ui mini grey header" style="font-size: 20px;">Upcoming Challenge</h1>
+        {% if B == None %}
+          <div class="ui large basic label center aligned" style="width: 50%;">NONE</div>
+        {% else %}
+        <div>
+          <a style="font-size: 16px;" href="{% url 'person:challenge' slug=B.slug %}" class="ui large label">{{ B.name }}</a>
+        </div>
+        <div style="font-size: 17px; margin-top: 8%;"><b>Before Start</b></div>
+        <div style="font-size: 16px; margin-top: 3%;" class="value ui large basic label" id="countdown_upcoming">
+        </div>
+
+        <script type="text/javascript">
+          $('#countdown_upcoming').countdown('{{ B.before_start }}', function(event) {
+            $(this).html(event.strftime('%D days %H:%M:%S'));
+            $(this).on('finish.countdown', function(){
+              location.reload();
+            });
+          });
+        </script>
+        {% endif %}
+      </div>
+    </div>
+
+  <div class="ui segment">
+    <div class="ui container centre aligned">
+      <h1 class="ui mini grey header" style="font-size: 20px;">Random Question</h1>
+      <div><a href="{% url 'person:random_question' %}" class="ui green large label" style="margin-top: 1.5%; width: 40%; font-size: 14px;">SOLVE</a></div>
+    </div>
+  </div>
+
+</div>
+
+</div>
+
+<div class="ui container center aligned">
+
+  <h1 class="ui black huge header center aligned" style="margin-top: 0.5%;">
+    <div class="ui massive basic label" style="font-size: 33px;">
+      Admin Dashboard
+    </div>
+  </h1>
+
+<div class="ui container center aligned">
+  <h2 class="ui mini header grey">Setter Requests</h2>
+</div>
+
+{% if not sr %}
+
+<div class="ui container grid center aligned" style="margin-top: 1.5%;">
+
+<div style="width: 60%;" class="ui info large message">
+No recent setter requests
+</div>
+
+</div>
+
+{% else %}
+
+<div class="ui container center aligned segment" style="width: 100%; max-height: 700px; overflow-x: scroll;">
+
+    <table id="datatable" style="width: 225%;" class="ui single line large table center aligned">
+
+  <thead>
+    <tr>
+    <th>Username</th>
+    <th>Description</th>
+    <th>Date</th>
+    <th>Action</th>
+  	</tr>
+  </thead>
+  <tbody>
+    {% for record in sr %}
+		<tr>
+			<td><a href="{% url 'person:profile' profile_slug=record.username %}">{{ record.username }}</a></td>
+
+		    <td>
+          <div class="ui button" id="popup" onclick="sweet_alert('{{ record.description }}')">View Description</div></td>
+
+		    <td>{{ record.date_submitted }}</td>
+		    <td>
+		    <form class="ui large form" method="POST">
+		    {% csrf_token %}
+		    	<input type="hidden" name="id" value={{record.id}}>
+		    	<input type="hidden" name="username" value={{record.username}}>
+		    	<select class="ui dropdown" name="action">
+				  <option value=""></option>
+				  <option value="1">Accept</option>
+				  <option value="0">Delete</option>
+				</select>
+		    	<button type="submit" class="ui submit button">Submit</button>
+		    </form>
+		    </td>
+		</tr>
+	{% endfor %}
+  </tbody>
+</table>
+</div>
+{% endif %}
+<div class="ui container center aligned" style="margin-top: 3%;">
+  <h2 class="ui mini header grey">Upcoming Challenges</h2>
+</div>
+{% if not upcoming %}
+<div class="ui container grid center aligned" style="margin-top: 1.5%;">
+
+<div style="width: 60%;" class="ui info large message">
+No Upcoming Challenges
+</div>
+
+</div>
+{% else %}
+<div class="ui container segment center aligned">
+<table class="ui celled large center aligned table">
+  <thead>
+    <tr>
+    <th>Challenge Name</th>
+    <th>Challenge Start</th>
+    <th>Challenge End</th>
+    <th>Link</th>
+  	</tr>
+  </thead>
+  <tbody>
+    {% for record in upcoming %}
+		<tr>
+			<td>{{ record.name }}</td>
+		    <td>{{ record.start_date }} at {{record.start_time}}</td>
+		    <td>{{ record.end_date }} at {{record.end_time}}</td>
+		    <td><a href="{% url 'person:challenge' slug=record.slug %}">View Challenge</a></td>
+		</tr>
+	{% endfor %}
+  </tbody>
+</table>
+</div>
+{% endif %}
+
+<div class="ui container center aligned" style="margin-top: 3%;">
+  <h2 class="ui mini header grey">List Of Problem Setters</h2>
+</div>
+
+<div class="ui container center aligned segment" style="width: 100%; max-height: 700px; overflow-x: scroll;">
+
+    <table id="datatable1" style="width: 225%;" class="ui single line large table center aligned">
+    <thead>
+      <tr>
+      <th>Username</th>
+      <th>Email</th>
+      <th>Contact</th>
+      <th>Number Of Challenges</th>
+      <th>Action</th>
+    	</tr>
+    </thead>
+    <tbody>
+      {% for entry in setters %}
+  		<tr>
+  			<td><a class="ui large label" href="{% url 'person:profile' profile_slug=entry.username %}">{{ entry.username }}</a></td>
+  		    <td>{{entry.email}}</td>
+  		    <td>{{entry.contactno}}</td>
+          <td>{{entry.noc}}</td>
+  		    <td><form method="POST" action="{% url 'person:remove_setter' setter_name=entry.username %}">
+            {% csrf_token %}
+            <button type="submit" class="ui submit basic medium button"><i class="x red large icon"></i>REMOVE ACCESS</button>
+          </form></td>
+  		</tr>
+  	{% endfor %}
+    </tbody>
+  </table>
+
+</div>
+
+</div>
+
+<script>
+$(document).ready(function() {
+    $('#datatable').DataTable();
+} );
+</script>
+
+<script>
+$(document).ready(function() {
+    $('#datatable1').DataTable();
+} );
+</script>
+
+<script>
+
+function sweet_alert(msg){
+  swal(
+  'Description',
+   msg
+)
+}
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,169 @@
+{% extends 'person/base.html' %}
+
+{% block title %}MCQTS - Practice{% endblock %}
+
+{% block content %}
+
+    <div class="ui container" style="margin-top: 1%;">
+
+        <div class="ui left rail">
+
+          <div class="ui container segment center aligned">
+
+          <div class="ui segment">
+            <div class="ui small blue statistic">
+                  <div class="value">
+                    {{ C.questions }}
+                  </div>
+                  <div class="label">
+                    Problems
+                  </div>
+            </div>
+          </div>
+
+          <div class="ui segment">
+            <div class="ui small statistic">
+                  <div class="value">
+                    {{ C.challenges }}
+                  </div>
+                  <div class="label">
+                    Challenges
+                  </div>
+            </div>
+          </div>
+
+          <div class="ui segment">
+            <div class="ui small red statistic">
+                  <div class="value">
+                    {{ C.users }}
+                  </div>
+                  <div class="label">
+                    Compititors
+                  </div>
+            </div>
+          </div>
+
+        </div>
+
+        </div>
+
+        <div class="ui right rail">
+
+          <div>
+
+            <div class="ui segment">
+              <div class="ui container center aligned">
+                <h1 class="ui mini grey header" style="font-size: 20px;">Ongoing Challenge</h1>
+                {% if A == None %}
+                  <div class="ui large basic label center aligned" style="width: 50%;">NONE</div>
+                {% else %}
+                <div>
+                  <a style="font-size: 16px;" href="{% url 'person:challenge' slug=A.slug %}" class="ui large label">{{ A.name }}</a>
+                </div>
+                <div style="font-size: 17px; margin-top: 8%;"><b>Ends In</b></div>
+                <div style="font-size: 16px; margin-top: 3%;" class="value ui large basic label" id="countdown_ongoing">
+                </div>
+                <script type="text/javascript">
+                  $('#countdown_ongoing').countdown('{{ A.before_end }}', function(event) {
+                    $(this).html(event.strftime('%D days %H:%M:%S'));
+                    $(this).on('finish.countdown', function(){
+                      location.reload();
+                    });
+                  });
+                </script>
+                {% endif %}
+              </div>
+            </div>
+
+            <div class="ui segment">
+              <div class="ui container center aligned">
+                <h1 class="ui mini grey header" style="font-size: 20px;">Upcoming Challenge</h1>
+                {% if B == None %}
+                  <div class="ui large basic label center aligned" style="width: 50%;">NONE</div>
+                {% else %}
+                <div>
+                  <a style="font-size: 16px;" href="{% url 'person:challenge' slug=B.slug %}" class="ui large label">{{ B.name }}</a>
+                </div>
+                <div style="font-size: 17px; margin-top: 8%;"><b>Before Start</b></div>
+                <div style="font-size: 16px; margin-top: 3%;" class="value ui large basic label" id="countdown_upcoming">
+                </div>
+
+                <script type="text/javascript">
+                  $('#countdown_upcoming').countdown('{{ B.before_start }}', function(event) {
+                    $(this).html(event.strftime('%D days %H:%M:%S'));
+                    $(this).on('finish.countdown', function(){
+                      location.reload();
+                    });
+                  });
+                </script>
+                {% endif %}
+              </div>
+            </div>
+
+          <div class="ui segment">
+            <div class="ui container centre aligned">
+              <h1 class="ui mini grey header" style="font-size: 20px;">Random Question</h1>
+              <div><a href="{% url 'person:random_question' %}" class="ui green large label" style="margin-top: 1.5%; width: 40%; font-size: 14px;">SOLVE</a></div>
+            </div>
+          </div>
+
+        </div>
+
+        </div>
+
+        <h1 class="ui black huge header center aligned" style="margin-top: 0.5%;">
+          <div class="ui massive basic label" style="font-size: 33px;">
+            PROBLEMSET
+          </div>
+        </h1>
+        <div class="ui container segment center aligned"  style="min-height: 800px; max-height: 800px; overflow-x: scroll; margin-left: 50px; margin-right: 50px">
+         <form name="q" id="q" method="POST">
+                {% csrf_token %}
+          <div class="ui grid" style="margin-top: 40px">
+            <div class="four wide column" >
+              <select id="difficulty" name="difficulty" class="ui fluid dropdown" >
+              <option selected = "selected" value="">Difficulty</option>
+              <option value="E">Easy</option>
+              <option value="M">Medium</option>
+              <option value="H">Hard</option>
+              </select>
+            </div>
+            <div class="ui input four wide column"><input name="search_item" placeholder="Search by Name" ></div>
+            <div class="ui input four wide column"><input name="search_tag" placeholder="Search by Tags" ></div>
+            <div class="ui input four wide column"><button class="btn-btn-success ui teal button" type="submit" >Search</button></div>
+            </form>
+          </div>
+       <table class="ui sortable single large table" style="margin-top: 5%;" >
+        <thead>
+          <tr><th><i class="sort alphabet up icon"></i>Name</th>
+          <th><i class="shield alternate icon"></i>Difficulty</th>
+          <th><i class="tags icon"></i>Tags</th>
+          <th style="width: 15%;"><i class="linkify icon"></i>Link</th>
+          </tr>
+        </thead>
+        <tbody>
+        {%for question in questions%}
+      <tr>
+        <td data-label = "Name">{{question.name}}</td>
+        <td data-label = "Difficulty">
+
+          {% if question.difficulty == 'E' %}Easy
+          {% elif question.difficulty == 'M' %}Medium
+          {% elif question.difficulty == 'H' %}Hard
+          {% endif %}
+
+        </td>
+        <td data-label = "Tags"> {{question.tags}} </td>
+        <td> <a class="ui large green label" href="{% url 'person:question' question_slug=question.slug %}">Solve Now</a></td>
+      </tr>
+      {% endfor %}
+        </tbody>
+  </table>
+      </div>
+
+
+  </div>
+
+
+{% endblock %}
+<!--  <script type="text/javascript"><link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.19/api/fnMultiFilter.js"></script> -->

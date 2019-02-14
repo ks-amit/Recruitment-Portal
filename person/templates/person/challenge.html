@@ -1,0 +1,342 @@
+{% extends 'person/base.html' %}
+
+{% block title %}MCQTS - Challenge{% endblock %}
+
+{% block content %}
+
+      <h1 class="ui black huge header center aligned" style="margin-top: 0.5%;">
+        <div class="ui massive basic label" style="font-size: 33px;">
+          {{ challenge_name }}
+        </div>
+      </h1>
+
+      <div class="ui container" style="margin-top: 3%">
+
+        {% if status == 'C' %}
+
+        <div class="ui right rail">
+          <div class="ui segment">
+            <div class="ui mini header">
+              <div class="value ui blue message" style="margin-top: 3%;">Challenge has Ended
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ui left rail">
+
+          <div class="ui container segment center aligned">
+
+          <div class="ui segment">
+            <div class="ui small blue statistic">
+                  <div class="value">
+                    {{ C.questions }}
+                  </div>
+                  <div class="label">
+                    Problems
+                  </div>
+            </div>
+          </div>
+
+          <div class="ui segment">
+            <div class="ui small statistic">
+                  <div class="value">
+                    {{ C.challenges }}
+                  </div>
+                  <div class="label">
+                    Challenges
+                  </div>
+            </div>
+          </div>
+
+          <div class="ui segment">
+            <div class="ui small red statistic">
+                  <div class="value">
+                    {{ C.users }}
+                  </div>
+                  <div class="label">
+                    Compititors
+                  </div>
+            </div>
+          </div>
+
+        </div>
+
+        </div>
+
+        {% elif status == 'M' %}
+
+        <div class="ui left rail">
+
+          <div class="ui container segment center aligned">
+
+          <div class="ui segment">
+            <div class="ui small blue statistic">
+                  <div class="value">
+                    {{ C.questions }}
+                  </div>
+                  <div class="label">
+                    Problems
+                  </div>
+            </div>
+          </div>
+
+          <div class="ui segment">
+            <div class="ui small statistic">
+                  <div class="value">
+                    {{ C.challenges }}
+                  </div>
+                  <div class="label">
+                    Challenges
+                  </div>
+            </div>
+          </div>
+
+          <div class="ui segment">
+            <div class="ui small red statistic">
+                  <div class="value">
+                    {{ C.users }}
+                  </div>
+                  <div class="label">
+                    Compititors
+                  </div>
+            </div>
+          </div>
+
+        </div>
+
+        </div>
+
+          <div class="ui segment">
+            <div class="ui header">
+              <div class="label">
+                Before Challenge
+              </div>
+              <div class="ui center aligned grid">
+              <div class="value ui blue message" id="countdown"  style="margin-top: 3%; width: 35%;">
+              </div>
+            </div>
+            </div>
+            <script type="text/javascript">
+              $('#countdown').countdown('{{before}}', function(event) {
+                $(this).html(event.strftime('%D days %H:%M:%S'));
+                $(this).on('finish.countdown', function(){
+                  location.reload();
+                });
+              });
+            </script>
+          </div>
+
+        {% elif status == 'A' %}
+
+          <div class="ui right rail">
+            <div class="ui segment">
+              <div class="ui mini header">
+                <div class="label">
+                  Challenge Ends
+                </div>
+                <div class="value ui blue message" id="countdown"  style="margin-top: 3%;">
+                </div>
+              </div>
+              <script type="text/javascript">
+                $('#countdown').countdown('{{rem}}', function(event) {
+                  $(this).html(event.strftime('%D days %H:%M:%S'));
+                  $(this).on('finish.countdown', function(){
+                    location.reload();
+                  });
+                });
+              </script>
+            </div>
+          </div>
+
+
+            <div class="ui left rail">
+              {% if user_type == 'setter' %}
+              <div class="ui segment">
+                <div class="ui mini header">
+                  <div class="label">
+                    Extend Timing
+                  </div>
+                  <form class="ui large form" method="POST">
+                    {% csrf_token %}
+                      <div class="ui field left aligned container">
+                        <label style="font-size:16px;">
+                          End Date
+                        </label>
+                        <div class="ui small input">
+                          {{ form.end_date }}
+                        </div>
+                      </div>
+                      <div class="ui field left aligned container">
+                        <label style="font-size:16px;">
+                          End Time
+                        </label>
+                        <div class="ui small input">
+                          {{ form.end_time }}
+                        </div>
+                      </div>
+                      <div>
+                        <button type="submit" class="ui submit small green button">SAVE</button>
+                      </div>
+                  </form>
+                    <div class="ui container" style="margin-top: 2%;">
+                      {% if err %}
+                          <div class="ui mini message">
+                          {% for list in err %}
+                            {% for error in list %}
+                                      {{ error }}
+                                      <br>
+                            {% endfor %}
+                          {% endfor %}
+                          </div>
+                      {% endif %}
+                  </div>
+                </div>
+              </div>
+
+          {% endif %}
+
+          <div class="ui container segment center aligned">
+
+          <div class="ui segment">
+            <div class="ui small blue statistic">
+                  <div class="value">
+                    {{ C.questions }}
+                  </div>
+                  <div class="label">
+                    Problems
+                  </div>
+            </div>
+          </div>
+
+          <div class="ui segment">
+            <div class="ui small statistic">
+                  <div class="value">
+                    {{ C.challenges }}
+                  </div>
+                  <div class="label">
+                    Challenges
+                  </div>
+            </div>
+          </div>
+
+          <div class="ui segment">
+            <div class="ui small red statistic">
+                  <div class="value">
+                    {{ C.users }}
+                  </div>
+                  <div class="label">
+                    Compititors
+                  </div>
+            </div>
+          </div>
+
+        </div>
+
+          </div>
+          {% endif %}
+          {% if status == 'C' %}
+          <div class="ui floating positive large message">Challenge has Ended. All the questions are available for practice.</div>
+          {% if user_type == 'user' %}
+            <div class="ui container" style="width:40%;">
+            {% if participate == 1 %}
+            <div class="ui small blue statistic">
+                  <div class="value">
+                    {{ total.score }} / {{ total.total }}
+                  </div>
+                  <div class="label">
+                    Your Score
+                  </div>
+            </div>
+            {% elif participate == 0 %}
+            <div class="ui huge positive message">You did not take part in this contest</div>
+          {% endif %}
+          </div>
+          {% endif %}
+          {% endif %}
+
+          {% if status == 'C' %}
+            <div class="ui container center aligned" style="margin-top: 3%; margin-bottom: 3%;"><a style="width: 25%;" class="ui green large button" target="_blank" href="{% url 'person:leaderboard' challenge_slug=slug %}">VIEW LEADERBOARD</a></div>
+            {% if user_type == 'setter' or user_type == 'admin' %}
+              <div class="ui container center aligned" style="margin-top: 3%; margin-bottom: 3%;"><a style="width: 25%;" class="ui green large button" target="_blank" href="{% url 'person:report' challenge_slug=slug %}">VIEW REPORT</a></div>
+            {% endif %}
+          {% endif %}
+
+          {% if status == 'A' or status == 'C' %}
+          <div class="ui segment">
+            <div>
+              <label class="ui header">Questions</label>
+            </div>
+            <div style="margin-top: 2%;">
+
+              <table class="ui single line large table center aligned">
+
+                <thead>
+                  <tr>
+                    <th style="width:15%;">STATUS</th>
+                    <th>Question Name</th>
+                    <th>Points</th>
+                    <th></th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {% for question in questions %}
+
+                  <tr>
+                    <td>
+                      {% if status == 'A' and user_type == 'user' %}
+                        {% if question.solved == 1 %}
+                        <i class="check large teal icon"></i>
+                        {% elif question.solved == 0 %}
+                        <i class="x large teal icon"></i>
+                        {% endif %}
+                      {% elif status == 'C' and user_type == 'user' %}
+                        {% if question.attempted == -1 %}
+                        <i class="minus large grey icon"></i>
+                        {% elif question.attempted == 0 %}
+                        <i class="x large red icon"></i>
+                        {% elif question.attempted > 0 %}
+                        <i class="check large blue icon"></i>
+                        {% endif %}
+                      {% endif %}
+                    </td>
+                    <td>{{question.name}}</td>
+                    <td>{{question.points}}</td>
+                    <td><a href="{% url 'person:question' question_slug=question.slug %}" target="_blank">View</a></td>
+                  </tr>
+
+                  {% endfor %}
+                </tbody>
+
+              </table>
+
+            </div>
+          </div>
+
+        {% endif %}
+
+        <div class="ui segment">
+          <div>
+            <label class="ui header">Challenge Instructions</label>
+          </div>
+          <div style="margin-top: 2%;" class="ui floating info message">
+            {{ instr }}
+          </div>
+        </div>
+
+        <div class="ui segment">
+          <div>
+            <label class="ui header">Challenge Setters</label>
+          </div>
+          {% for setter in setters %}
+          <div style="margin-top: 2%;">
+            <div class="ui header"><a target="_blank" class="ui large label" href="{% url 'person:profile' profile_slug=setter.setter %}">{{setter.setter}}</a></div>
+          </div>
+          {% endfor %}
+        </div>
+
+      </div>
+
+
+{% endblock %}

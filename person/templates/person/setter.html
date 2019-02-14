@@ -1,0 +1,249 @@
+{% extends 'person/base.html' %}
+
+{% block title %}MCQTS - Setter{% endblock %}
+
+{% block content %}
+
+<script>
+$(document).ready(function() {
+    $('#datatable').DataTable();
+} );
+</script>
+
+      <div class="ui container" style="margin-top: 1%;">
+
+        <div class="ui left rail">
+
+          <div class="ui container segment center aligned">
+
+          <div class="ui segment">
+            <div class="ui small blue statistic">
+                  <div class="value">
+                    {{ C.questions }}
+                  </div>
+                  <div class="label">
+                    Problems
+                  </div>
+            </div>
+          </div>
+
+          <div class="ui segment">
+            <div class="ui small statistic">
+                  <div class="value">
+                    {{ C.challenges }}
+                  </div>
+                  <div class="label">
+                    Challenges
+                  </div>
+            </div>
+          </div>
+
+          <div class="ui segment">
+            <div class="ui small red statistic">
+                  <div class="value">
+                    {{ C.users }}
+                  </div>
+                  <div class="label">
+                    Compititors
+                  </div>
+            </div>
+          </div>
+
+        </div>
+
+        </div>
+
+        <div class="ui right rail">
+
+          <div>
+
+            <div class="ui segment">
+              <div class="ui container center aligned">
+                <h1 class="ui mini grey header" style="font-size: 20px;">Ongoing Challenge</h1>
+                {% if A == None %}
+                  <div class="ui large basic label center aligned" style="width: 50%;">NONE</div>
+                {% else %}
+                <div>
+                  <a style="font-size: 16px;" href="{% url 'person:challenge' slug=A.slug %}" class="ui large label">{{ A.name }}</a>
+                </div>
+                <div style="font-size: 17px; margin-top: 8%;"><b>Ends In</b></div>
+                <div style="font-size: 16px; margin-top: 3%;" class="value ui large basic label" id="countdown_ongoing">
+                </div>
+                <script type="text/javascript">
+                  $('#countdown_ongoing').countdown('{{ A.before_end }}', function(event) {
+                    $(this).html(event.strftime('%D days %H:%M:%S'));
+                    $(this).on('finish.countdown', function(){
+                      location.reload();
+                    });
+                  });
+                </script>
+                {% endif %}
+              </div>
+            </div>
+
+            <div class="ui segment">
+              <div class="ui container center aligned">
+                <h1 class="ui mini grey header" style="font-size: 20px;">Upcoming Challenge</h1>
+                {% if B == None %}
+                  <div class="ui large basic label center aligned" style="width: 50%;">NONE</div>
+                {% else %}
+                <div>
+                  <a style="font-size: 16px;" href="{% url 'person:challenge' slug=B.slug %}" class="ui large label">{{ B.name }}</a>
+                </div>
+                <div style="font-size: 17px; margin-top: 8%;"><b>Before Start</b></div>
+                <div style="font-size: 16px; margin-top: 3%;" class="value ui large basic label" id="countdown_upcoming">
+                </div>
+
+                <script type="text/javascript">
+                  $('#countdown_upcoming').countdown('{{ B.before_start }}', function(event) {
+                    $(this).html(event.strftime('%D days %H:%M:%S'));
+                    $(this).on('finish.countdown', function(){
+                      location.reload();
+                    });
+                  });
+                </script>
+                {% endif %}
+              </div>
+            </div>
+
+          <div class="ui segment">
+            <div class="ui container centre aligned">
+              <h1 class="ui mini grey header" style="font-size: 20px;">Random Question</h1>
+              <div><a href="{% url 'person:random_question' %}" class="ui green large label" style="margin-top: 1.5%; width: 40%; font-size: 14px;">SOLVE</a></div>
+            </div>
+          </div>
+
+        </div>
+
+        </div>
+
+        {% if user_type == 'U' %}
+
+        <h1 class="ui black huge header center aligned" style="margin-top: 0.5%;">
+          <div class="ui massive basic label" style="font-size: 33px;">
+            Setter Application
+          </div>
+        </h1>
+
+          {% if submitted == '0' %}
+              <div class="ui segment left aligned">
+                <div class="ui label" style="font-size:16px;">Enter below a brief description about why you want to become a question setter and why should we choose you as one. Mention any relevant accomplishments and drop the links to the related documents
+                  or any online content regarding your achievemtns. (You may mention your profiles on various online platforms such as your GitHub profile)
+                </div>
+              </div>
+              <form class="ui large form" method="POST">
+                {% csrf_token %}
+                <div class="ui stacked center aligned container segment">
+
+                  <div class="field">
+                    <div class="ui large input" style="height: 300px;">
+                      {{ form.description }}
+                    </div>
+                  </div>
+                  <button type="submit" class="ui large blue submit button" style="width: 30%;">Submit</button>
+                </div>
+              </form>
+
+          {% elif submitted == '1' %}
+            <div class="ui center aligned container" style="margin-top:5%;">
+              <div class="ui floating info message">
+                <div class="header" style="font-size: 20px;">SETTER REQUEST RECEIVED</div>
+                <p style="font-size: 16px;">Your request has been received. Please wait until it gets addressed for further activity. However you may manage the contests in which you are a collaborator.</p>
+              </div>
+            </div>
+          {% endif %}
+
+        {% elif user_type == 'S' %}
+        <h1 class="ui black huge header center aligned" style="margin-top: 0.5%;">
+          <div class="ui massive basic label" style="font-size: 33px;">
+            Setter Dashboard
+          </div>
+        </h1>
+              <div class="ui container left aligned">  <h1 class="ui large grey header">Your Challenges</h1></div>
+
+              <div class="ui container center aligned segment" style="width: 100%; max-height: 700px; overflow-x: scroll;">
+
+
+                  <table id="datatable" style="width: 225%;" class="ui single line large table center aligned">
+
+                    <thead>
+                      <tr>
+                        <th style="width:15%;">Challenge Name</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Challenge Status</th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      {% for contest in contests %}
+
+                      <tr>
+                        <td>
+                          <a href="{% url 'person:challenge' slug=contest.slug %}" target="_blank">{{ contest.name }}</a>
+                        </td>
+                        <td>{{ contest.start_date }}, {{ contest.start_time }}</td>
+                        <td>{{ contest.end_date }}, {{ contest.end_time }}</td>
+                        <td>
+
+                          <div class="ui large label">
+                            {% if contest.cs == 'A' %}Ongoing
+                            {% elif contest.cs == 'M' %}Upcoming
+                            {% elif contest.cs == 'C' %}Completed
+                            {% endif %}
+                          </div>
+
+                        </td>
+                      </tr>
+
+                      {% endfor %}
+                    </tbody>
+
+                  </table>
+
+              </div>
+              <h1 class="ui black huge header center aligned" style="font-size: 35px;">
+                <div>
+                  Create Challenge
+                </div>
+              </h1>
+              <div class="ui segment left aligned">
+                <div class="ui label" style="font-size:16px;">Enter appropriate details regarding the challenge you are creating. Please fill in the below details carefully, as
+                  they cannot be modified once you proceed further.
+                </div>
+              </div>
+              <form class="ui form" method="POST">
+                {% csrf_token %}
+                <div class="ui stacked center aligned container" style="width: 50%;">
+                  <div class="ui stacked left aligned container segment">
+                  <div class="field">
+                    <label style="font-size: 16px;">
+                      Contest Name
+                    </label>
+                    <div class="ui large input">
+                      {{ form.name }}
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label  style="font-size: 16px;">
+                      Contest URL (SLUG)
+                    </label>
+                    <div class="ui large input">
+                      {{ form.slug }}
+                    </div>
+                  </div>
+                  </div>
+                  <button type="submit" class="ui large blue submit button" style="width: 25%;">Submit</button>
+                  {% if err %}
+                      <div class="ui floating negative message">
+                        <p style="font-size: 14px;">Another contest with the same URL already exists. Please enter a different URL.</p>
+                      </div>
+                  {% endif %}
+                </div>
+              </form>
+        {% endif %}
+
+      </div>
+
+
+{% endblock %}

@@ -1,0 +1,277 @@
+{% extends 'person/base.html' %}
+
+{% block title %}MCQTS - Contests{% endblock %}
+
+{% block content %}
+
+      <div class="ui container" style="margin-top: 1%;">
+
+        <div class="ui left rail">
+
+          <div class="ui container segment center aligned">
+
+          <div class="ui segment">
+            <div class="ui small blue statistic">
+                  <div class="value">
+                    {{ C.questions }}
+                  </div>
+                  <div class="label">
+                    Problems
+                  </div>
+            </div>
+          </div>
+
+          <div class="ui segment">
+            <div class="ui small statistic">
+                  <div class="value">
+                    {{ C.challenges }}
+                  </div>
+                  <div class="label">
+                    Challenges
+                  </div>
+            </div>
+          </div>
+
+          <div class="ui segment">
+            <div class="ui small red statistic">
+                  <div class="value">
+                    {{ C.users }}
+                  </div>
+                  <div class="label">
+                    Compititors
+                  </div>
+            </div>
+          </div>
+
+        </div>
+
+        </div>
+
+        <div class="ui right rail">
+
+          <div>
+
+            <div class="ui segment">
+              <div class="ui container center aligned">
+                <h1 class="ui mini grey header" style="font-size: 20px;">Ongoing Challenge</h1>
+                {% if A == None %}
+                  <div class="ui large basic label center aligned" style="width: 50%;">NONE</div>
+                {% else %}
+                <div>
+                  <a style="font-size: 16px;" href="{% url 'person:challenge' slug=A.slug %}" class="ui large label">{{ A.name }}</a>
+                </div>
+                <div style="font-size: 17px; margin-top: 8%;"><b>Ends In</b></div>
+                <div style="font-size: 16px; margin-top: 3%;" class="value ui large basic label" id="countdown_ongoing">
+                </div>
+                <script type="text/javascript">
+                  $('#countdown_ongoing').countdown('{{ A.before_end }}', function(event) {
+                    $(this).html(event.strftime('%D days %H:%M:%S'));
+                    $(this).on('finish.countdown', function(){
+                      location.reload();
+                    });
+                  });
+                </script>
+                {% endif %}
+              </div>
+            </div>
+
+            <div class="ui segment">
+              <div class="ui container center aligned">
+                <h1 class="ui mini grey header" style="font-size: 20px;">Upcoming Challenge</h1>
+                {% if B == None %}
+                  <div class="ui large basic label center aligned" style="width: 50%;">NONE</div>
+                {% else %}
+                <div>
+                  <a style="font-size: 16px;" href="{% url 'person:challenge' slug=B.slug %}" class="ui large label">{{ B.name }}</a>
+                </div>
+                <div style="font-size: 17px; margin-top: 8%;"><b>Before Start</b></div>
+                <div style="font-size: 16px; margin-top: 3%;" class="value ui large basic label" id="countdown_upcoming">
+                </div>
+
+                <script type="text/javascript">
+                  $('#countdown_upcoming').countdown('{{ B.before_start }}', function(event) {
+                    $(this).html(event.strftime('%D days %H:%M:%S'));
+                    $(this).on('finish.countdown', function(){
+                      location.reload();
+                    });
+                  });
+                </script>
+                {% endif %}
+              </div>
+            </div>
+
+          <div class="ui segment">
+            <div class="ui container centre aligned">
+              <h1 class="ui mini grey header" style="font-size: 20px;">Random Question</h1>
+              <div><a href="{% url 'person:random_question' %}" class="ui green large label" style="margin-top: 1.5%; width: 40%; font-size: 14px;">SOLVE</a></div>
+            </div>
+          </div>
+
+        </div>
+
+        </div>
+
+          <h1 class="ui black huge header center aligned" style="margin-top: 0.5%;">
+            <div class="ui massive basic label" style="font-size: 33px;">
+              ARENA
+            </div>
+          </h1>
+
+        <form class="ui large form" method="POST">
+            {% csrf_token %}
+            <div style="margin-top: 5%" class="ui stackable center aligned container">
+              <div class="ui grey header">
+                <label>
+                  ONGOING CHALLENGES
+                </label>
+              </div>
+
+               <div class="ui stackable center aligned container">
+
+                 <div>
+
+                 {% if not ongoing %}
+                 <div class="ui container center aligned" style="width: 60%;">
+                      <div class="ui positive basic message">
+                      <a>  {{ success1 }} </a>
+                      </div>
+                </div>
+                {% else %}
+
+                <div class="ui stackable container center aligned" style="max-height: 250px; overflow-x: scroll;">
+
+                  <table class="ui single large center aligned table">
+                  <thead>
+                    <tr><th>Challenge Name</th>
+                    <th>Challenge Start</th>
+                    <th>Challenge End</th>
+                    <th>Challenge Link</th>
+                  </tr></thead>
+                  <tbody>
+                    {% for x in ongoing_challenge %}
+                      <tr>
+                        <td data-label="Contest Name">{{ x.name }}</td>
+                        <td data-label="Contestt Start Day">{{ x.start_date }}, {{x.start_time}}</td>
+                        <td data-label="Contest End Day">{{ x.end_date }}, {{x.end_time}}</td>
+                        <td><a href="{% url 'person:challenge' slug=x.slug %}" target="_blank">View Contest</a></td>
+                      </tr>
+                    {% endfor %}
+
+                  </tbody>
+
+                  </table>
+
+                </div>
+
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+        </form>
+
+        <form class="ui large form" method="POST">
+            {% csrf_token %}
+            <div class="ui stackable center aligned container">
+              <div style="margin-top: 5%" class="ui grey header">
+                <label>
+                  UPCOMING CHALLENGES
+                </label>
+              </div>
+
+               <div class="ui stackable center aligned container" >
+
+                 <div>
+
+                  {% if not upcoming %}
+                  <div class="ui container center aligned" style="width: 60%;">
+                       <div class="ui positive message">
+                      <a>   {{ success2 }}  </a>
+                       </div>
+                 </div>
+                  {% else %}
+
+                  <div class="ui stackable container center aligned" style="max-height: 250px; overflow-x: scroll;">
+
+
+                  <table class="ui large center aligned single table">
+                  <thead>
+                    <tr><th>Challenge Name</th>
+                    <th>Challenge Start</th>
+                    <th>Challenge End</th>
+                    <th>Challenge Link</th>
+                  </tr></thead>
+                  <tbody>
+                  {% for x in upcoming_challenge %}
+                    <tr>
+                      <td data-label="Contest Name">{{ x.name }}</td>
+                      <td data-label="Contest Start Day">{{ x.start_date }}, {{x.start_time}}</td>
+                      <td data-label="Contest End Day">{{ x.end_date }}, {{x.end_time}}</td>
+                      <td><a href="{% url 'person:challenge' slug=x.slug %}" target="_blank">View Contest</a></td>
+                    </tr>
+                  {% endfor %}
+                  </tbody>
+                  </table>
+
+                </div>
+
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+        </form>
+
+        <form class="ui large form" method="POST">
+            {% csrf_token %}
+        <div style="margin-top: 5%" class="ui stackable center aligned container">
+          <div class="ui grey header">
+            <label>
+              ARCHIVED CHALLENGES
+            </label>
+          </div>
+
+           <div class="ui stackable center aligned container">
+
+             <div>
+
+             {% if not archived %}
+             <div class="ui container center aligned" style="width: 60%;">
+                  <div class="ui positive basic message">
+                  <a>  {{ success3 }} </a>
+                  </div>
+            </div>
+            {% else %}
+
+            <div class="ui stackable container center aligned" style="max-height: 250px; overflow-x: scroll;">
+
+              <table class="ui single large center aligned table">
+              <thead>
+                <tr><th>Challenge Name</th>
+                <th>Challenge Start</th>
+                <th>Challenge End</th>
+                <th>Challenge Link</th>
+              </tr></thead>
+              <tbody>
+                {% for x in archived_challenge %}
+                  <tr>
+                    <td data-label="Contest Name">{{ x.name }}</td>
+                    <td data-label="Contest Start Day">{{ x.start_date }}, {{x.start_time}}</td>
+                    <td data-label="Contest End Day">{{ x.end_date }}, {{x.end_time}}</td>
+                    <td><a href="{% url 'person:challenge' slug=x.slug %}" target="_blank">View Contest</a></td>
+                  </tr>
+                {% endfor %}
+
+              </tbody>
+
+              </table>
+
+            </div>
+
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </form>
+
+      </div>
+
+{% endblock %}

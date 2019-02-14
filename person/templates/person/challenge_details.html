@@ -1,0 +1,352 @@
+{% extends 'person/base.html' %}
+
+{% block title %}MCQTS - Challenge{% endblock %}
+
+{% block content %}
+
+          <div class="ui right rail">
+            <div class="ui segment">
+              <div class="ui mini header">
+                <div class="label">
+                  Before Challenge
+                </div>
+                <div class="value ui blue message" id="countdown"  style="margin-top: 3%;">
+                </div>
+              </div>
+              <script type="text/javascript">
+                $('#countdown').countdown('{{before}}', function(event) {
+                  $(this).html(event.strftime('%D days %H:%M:%S'));
+                });
+              </script>
+            </div>
+            <div class="ui segment">
+              <div class="ui mini header">
+                <div class="label">
+                  Delete Challenge
+                </div>
+                <form method="POST" action={% url 'person:remove_challenge' challenge_slug=slug %} style="margin-top: 5%;">
+                  {% csrf_token %}
+                  <div class="ui mini fluid input">
+                    {{ form2.oldpassword }}
+                  </div>
+                  <div style="margin-top: 3%;">
+                    <button type="submit" class="ui submit small green button">Submit</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <div class="ui left rail">
+
+            <div class="ui stacked center aligned container segment">
+              <div class="ui mini header">
+                Collaborators
+              </div>
+
+              {% for setter in setters %}
+              <div style="margin-top: 5%;">
+                {% if user_type == 'setter' %}
+                <form method="POST" action={% url 'person:remove_collaborator' challenge_slug=slug collaborator=setter.setter %}>
+                  {% csrf_token %}
+                  <button type="submit" class="ui fluid button">{{setter.setter}}</button>
+                </form>
+                {% elif user_type == 'admin' %}
+                  <a href="{% url 'person:profile' profile_slug=setter.setter %}" class="ui fluid large label">{{setter.setter}}</a>
+                {% endif %}
+              </div>
+              {% endfor %}
+              {% if user_type == 'setter' %}
+              <div class="ui segment">
+              <form class="ui large form" method="POST" action="{% url 'person:collaborator' challenge_slug=slug %}">
+                {% csrf_token %}
+                <div class="ui field left aligned container">
+                  <label style="font-size:16px;">
+                    Add New
+                  </label>
+                  <div class="ui small input">
+                    {{ form1.setter }}
+                  </div>
+                </div>
+                <div>
+                  <button type="submit" class="ui submit small green button">ADD</button>
+                </div>
+              </form>
+              <div class="ui info small message"><p>Enter a valid username to make him a collaborator. Invalid usernames will result in nothing.</p></div>
+              <div class="ui info small message"><p>Click on a user to remove him as a collaborator.</p></div>
+            </div>
+            {% endif %}
+            </div>
+
+          </div>
+
+          <h1 class="ui black huge header center aligned" style="margin-top: 0.5%;">
+            <div class="ui massive basic label" style="font-size: 33px;">
+              {{ curr_challenge.name }}
+            </div>
+          </h1>
+          {% if user_type == 'setter' %}
+          <h2 class="ui black large header center aligned" style="font-size: 30px;">
+            <div>
+              MANAGE YOUR CHALLENGE
+            </div>
+          </h2>
+          <div class="ui segment left aligned container">
+            <div class="ui fluid label" style="font-size:16px;">Enter appropriate details regarding the challenge you are creating. Once the challenge starts, you would be only allowed
+              to extend the timing.
+            </div>
+          </div>
+          {% elif user_type == 'admin' %}
+          <h2 class="ui black large header center aligned" style="font-size: 30px;">
+            <div>
+              CHALLENGE OVERVIEW
+            </div>
+          </h2>
+          {% endif %}
+
+          {% if user_type == 'setter' %}
+
+          <div class="ui container" style="margin-bottom: 2%;">
+
+              {% if err %}
+                  <div class="ui warning message">
+                  {% for list in err %}
+                    {% for error in list %}
+                              {{ error }}
+                              <br>
+                    {% endfor %}
+                  {% endfor %}
+                  </div>
+              {% endif %}
+
+              <form class="ui large form" method="POST">
+                {% csrf_token %}
+                <div class="ui stackable center aligned container">
+                  <div class="ui grey header">
+                    <label>
+                      Contest Details
+                    </label>
+                  </div>
+                  <div class="ui stackable left aligned container segment" style="width: 60%;">
+                      <div class="field">
+                        <label style="font-size:16px;">
+                          Contest Name
+                        </label>
+                        <div class="ui large input">
+                          {{ form.name }}
+                        </div>
+                      </div>
+
+                      <div class="field">
+                        <label style="font-size:16px;">
+                          Contest URL
+                        </label>
+                        <div class="ui large input">
+                          {{ form.slug }}
+                        </div>
+                      </div>
+
+                      <div class="field">
+                        <label style="font-size:16px;">
+                          Contest Type
+                        </label>
+                        <div class="ui large input">
+                          {{ form.type }}
+                        </div>
+                      </div>
+
+                    </div>
+                    <div class="ui grey header">
+                      <label>
+                        Contest Timings (IST)
+                      </label>
+                    </div>
+                    <div class="ui stacked left aligned container segment" style="width: 60%;">
+
+                      <div class="field">
+                        <label style="font-size:16px;">
+                          Start Date
+                        </label>
+                        <div class="ui large input">
+                          {{ form.start_date }}
+                        </div>
+                      </div>
+
+                      <div class="field">
+                        <label style="font-size:16px;">
+                          Start Time
+                        </label>
+                        <div class="ui large input">
+                          {{ form.start_time }}
+                        </div>
+                      </div>
+
+                      <div class="field">
+                        <label style="font-size:16px;">
+                          Ending Date
+                        </label>
+                        <div class="ui large input">
+                          {{ form.end_date }}
+                        </div>
+                      </div>
+
+                      <div class="field">
+                        <label style="font-size:16px;">
+                          Ending Time
+                        </label>
+                        <div class="ui large input">
+                          {{ form.end_time }}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="ui grey header">
+                      <label>
+                        Questions
+                      </label>
+                    </div>
+                    <div class="ui stackable left aligned grid segment">
+                      {% if questions %}
+
+                        <table class="ui single line table">
+
+                          <thead>
+                            <tr>
+                              <th>#</th>
+                              <th>Question Name</th>
+                              <th>Points</th>
+                              <th></th>
+                            </tr>
+                          </thead>
+
+                          <tbody>
+                            {% for question in questions %}
+
+                            <tr>
+                              <td>
+
+                              <a href="{% url 'person:remove_question' question_slug=question.slug %}"><i class="times large red icon center aligned"></i></a>
+
+                              </td>
+                              <td>{{question.name}}</td>
+                              <td>{{question.points}}</td>
+                              <td><a href="{% url 'person:question' question_slug=question.slug %}" target="_blank">View</a></td>
+                            </tr>
+
+                            {% endfor %}
+                          </tbody>
+
+                        </table>
+                      {% endif %}
+                      <div class="ui right aligned container" style="margin-bottom: 1%; margin-top: 1%;">
+                        <a class="ui small green button" href="{% url 'person:new_question' challenge_slug=slug %}" target="_blank">ADD QUESTION</a>
+                      </div>
+                    </div>
+
+                    <div class="ui stackable left aligned container segment" style="width: 95%;">
+                      <div class="field">
+                        <label style="font-size:16px;">
+                          Challenge Instructions
+                        </label>
+                        <div class="ui large input" style="min-height: 300px;" style="margin-top: 1.5%;">
+                          {{ form.instructions }}
+                        </div>
+                      </div>
+                    </div>
+
+                  <button type="submit" class="ui large blue submit button" style="width: 30%;">Save Details</button>
+                </div>
+              </form>
+            </div>
+            {% elif user_type == 'admin' %}
+
+              <div class="ui container" style="margin-bottom: 2%;">
+
+                <div class="ui stackable center aligned container">
+
+                  <table class="ui single line large table center aligned">
+
+
+                    <tbody>
+
+                      <tr>
+                        <td class="ui small header">Challenge URL</td>
+                        <td>{{ curr_challenge.slug }}</td>
+                      </tr>
+
+                      <tr>
+                        <td class="ui small header">Challenge Type</td>
+                        <td>{% if curr_challenge.type == 'O' %}Open
+                            {% else %}Private
+                            {% endif %}
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td class="ui small header">Challenge Start</td>
+                        <td>{{ curr_challenge.start_date }}, {{ curr_challenge.start_time }} </td>
+                      </tr>
+
+                      <tr>
+                        <td class="ui small header">Challenge End</td>
+                        <td>{{ curr_challenge.end_date }}, {{ curr_challenge.end_time }} </td>
+                      </tr>
+
+                    </tbody>
+
+                  </table>
+
+                  <div class="ui grey header">
+                    <label>
+                      Questions
+                    </label>
+                  </div>
+
+                  <table class="ui single line table">
+
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Question Name</th>
+                        <th>Points</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      {% for question in questions %}
+
+                      <tr>
+                        <td>
+
+                        <a href="{% url 'person:remove_question' question_slug=question.slug %}"><i class="times large red icon center aligned"></i></a>
+
+                        </td>
+                        <td>{{question.name}}</td>
+                        <td>{{question.points}}</td>
+                        <td><a href="{% url 'person:question' question_slug=question.slug %}" target="_blank">View</a></td>
+                      </tr>
+
+                      {% endfor %}
+                    </tbody>
+
+                  </table>
+
+                  <div class="ui grey header">
+                    <label>
+                      Challenge Instructions
+                    </label>
+                  </div>
+
+                  <div class="ui stackable left aligned container segment" style="width: 95%;">
+                      <div class="ui large disabled input" style="min-height: 300px;" style="margin-top: 1.5%;">
+                        {{ curr_challenge.instructions }}
+                      </div>
+                  </div>
+
+                </div>
+
+              </div>
+
+            {% endif %}
+{% endblock %}

@@ -1,0 +1,61 @@
+{% load static from staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>MCQTS - 404</title>
+    <link rel="stylesheet" href="{% static 'static/semantic.min.css' %}">
+
+    <style type="text/css">
+    body {
+      background-color: #DADADA;
+    }
+    body > .grid {
+      height: 100%;
+    }
+    .image {
+      margin-top: -100px;
+    }
+    .column {
+      max-width: 500px;
+    }
+  </style>
+  </head>
+  <body>
+    <div>
+      <div class="ui massive top fixed stackable menu">
+
+        <div style="margin-left: 47%; margin-top: 0.5%;">
+          <h1 class="ui huge header"><a href="#">MCQTS</a></h1>
+        </div>
+
+        <div class="right menu">
+          <div class="{% block login_button %}{% endblock %} item">
+            <a href="{% url 'accounts:login' %}" class="ui inverted violet button" style="width: 120px;">Login</a>
+          </div>
+          <div class="{% block signup_button %}{% endblock %} item">
+            <a href="{% url 'accounts:signup' %}" class="ui inverted violet button" style="width: 120px;">Sign Up</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="ui middle aligned center aligned grid">
+    <div class="column">
+
+        <div class="ui red huge message">
+          <div class="header">
+            OOPS! YOU ARE AT THE WRONG URL.
+          </div>
+          <div>
+            This page does not exist.
+          </div>
+        </div>
+
+  </div>
+  </div>
+
+  </body>
+</html>

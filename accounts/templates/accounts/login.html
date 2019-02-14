@@ -1,0 +1,56 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}MCQTS - Login{% endblock %}
+
+{% block form %}
+
+
+  <div class="ui middle aligned center aligned grid">
+    <div class="column">
+      <h1 class="ui violet huge header">
+        <div>
+          Log-in to your account
+        </div>
+      </h1>
+
+      <form class="ui large inverted form" method="POST">
+        {% csrf_token %}
+        <div class="ui stacked segment">
+          <div class="field">
+            <div class="ui input">
+              {{ form.username }}
+            </div>
+          </div>
+          <div class="field">
+            <div class="ui input">
+              {{ form.password }}
+            </div>
+          </div>
+          <button type="submit" class="ui fluid large primary submit button">Login</button>
+        </div>
+      </form>
+
+      {% if err %}
+          <div class="ui warning message">
+          {% for list in err %}
+            {% for error in list %}
+                      {{ error }}
+                      <br>
+            {% endfor %}
+          {% endfor %}
+          </div>
+      {% endif %}
+
+      <div class="ui message">
+        Forgot your credentials? <a href="{% url 'accounts:forgot' %}">Reset</a>
+      </div>
+
+      <div class="ui message">
+        New to us? <a href="{% url 'accounts:signup' %}">Sign Up</a>
+      </div>
+    </div>
+  </div>
+
+
+
+{% endblock %}

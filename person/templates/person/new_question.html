@@ -1,0 +1,137 @@
+{% extends 'person/base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}MCQTS - New Question{% endblock %}
+
+{% block content %}
+
+          <h1 class="ui black huge header center aligned" style="font-size: 35px;">
+            <div>
+              MANAGE QUESTION
+            </div>
+          </h1>
+          <div class="ui segment center aligned container">
+            <div class="ui label" style="font-size:16px;">Enter appropriate details regarding the question you are creating. Once the question gets displayed, you would not be allowed
+              to modify it.
+            </div>
+          </div>
+          <div class="ui container" style="margin-bottom: 2%;">
+            {% if err %}
+                <div class="ui warning message">
+                {% for list in err %}
+                  {% for error in list %}
+                            {{ error }}
+                            <br>
+                  {% endfor %}
+                {% endfor %}
+                </div>
+            {% endif %}
+              <form class="ui large form" method="POST">
+                {% csrf_token %}
+                <div class="ui stacked center aligned container">
+
+                  <div class="ui stackable center aligned container">
+                    <div class="ui stackable left aligned container segment" style="width: 60%;">
+                      <div class="field">
+                        <label style="font-size:16px;">
+                          Question Name
+                        </label>
+                        <div class="ui large input" style="margin-top: 1.5%;">
+                          {{ form.name }}
+                        </div>
+                      </div>
+
+                      <div class="field">
+                        <label style="font-size:16px;">
+                          Question URL
+                        </label>
+                        <div class="ui large input" style="margin-top: 1.5%;">
+                          {{ form.slug }}
+                        </div>
+                      </div>
+
+                      <div class="field">
+                        <label style="font-size:16px;">
+                          Points Awarded
+                        </label>
+                        <div class="ui large input" style="margin-top: 1.5%;">
+                          {{ form.points }}
+                        </div>
+                      </div>
+
+                      <div class="field">
+                        <label style="font-size:16px;">
+                          Difficulty
+                        </label>
+                        <div class="ui large input" style="margin-top: 1.5%;">
+                          {{ form.difficulty }}
+                        </div>
+                      </div>
+
+                      <div class="field">
+                        <label style="font-size:16px;">
+                          Tags
+                        </label>
+                        <div class="ui large input" style="margin-top: 1.5%;">
+                          {{ form.tags }}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="ui stackable left aligned container segment" style="width: 95%;">
+                      <div class="field">
+                        <label style="font-size:16px;">
+                          Problem Statement
+                        </label>
+                        <div class="ui large input" style="min-height: 300px;" style="margin-top: 1.5%;">
+                          {{ form.statement }}
+                        </div>
+                      </div>
+
+                      <div class="field">
+                        <label style="font-size:16px;">
+                          Choices
+                        </label>
+                        <div class="ui large input" style="margin-top: 1.5%;">
+                          {{ form.option1 }}
+                        </div>
+                        <div class="ui large input" style="margin-top: 1.5%;">
+                          {{ form.option2 }}
+                        </div>
+                        <div class="ui large input" style="margin-top: 1.5%;">
+                          {{ form.option3 }}
+                        </div>
+                        <div class="ui large input" style="margin-top: 1.5%;">
+                          {{ form.option4 }}
+                        </div>
+                      </div>
+
+                      <div class="field">
+                        <label style="font-size:16px;">
+                          Answer(s)
+                        </label>
+
+                        <div class="ui large input" style="margin-top: 1.5%;">
+                          {% for answers in form.answer %}
+                          <div class="ui large label" style="margin-left: 6%;">
+                            {{ answers }}
+                          </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="field">
+                          <label style="font-size:16px;">
+                            Problem Editorial
+                          </label>
+                          <div class="ui large input" style="min-height: 300px;" style="margin-top: 1.5%;">
+                            {{ form.editorial }}
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                  <button type="submit" class="ui large blue submit button" style="width: 30%; margin-top: 2%;">Save Changes</button>
+                </div>
+              </form>
+            </div>
+          </div>
+{% endblock %}

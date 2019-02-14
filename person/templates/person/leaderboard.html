@@ -1,0 +1,198 @@
+{% extends 'person/base.html' %}
+
+{% block title %}MCQTS - Challenge{% endblock %}
+
+{% block content %}
+
+<script>
+$(document).ready(function() {
+    $('#datatable').DataTable();
+} );
+</script>
+
+<h1 class="ui black huge header center aligned" style="margin-top: 0.5%;">
+  <div class="ui massive basic label" style="font-size: 35px;">
+    {{ challenge_name }}
+  </div>
+</h1>
+
+      <div class="ui container" style="margin-top: 3%">
+
+        <div class="ui left rail">
+
+          <div class="ui container segment center aligned">
+
+          <div class="ui segment">
+            <div class="ui small blue statistic">
+                  <div class="value">
+                    {{ C.questions }}
+                  </div>
+                  <div class="label">
+                    Problems
+                  </div>
+            </div>
+          </div>
+
+          <div class="ui segment">
+            <div class="ui small statistic">
+                  <div class="value">
+                    {{ C.challenges }}
+                  </div>
+                  <div class="label">
+                    Challenges
+                  </div>
+            </div>
+          </div>
+
+          <div class="ui segment">
+            <div class="ui small red statistic">
+                  <div class="value">
+                    {{ C.users }}
+                  </div>
+                  <div class="label">
+                    Compititors
+                  </div>
+            </div>
+          </div>
+
+        </div>
+
+        </div>
+
+        <div class="ui right rail">
+          <div class="ui segment">
+            <div class="ui mini header">
+              <div class="value ui blue message" style="margin-top: 3%;">Challenge has Ended
+              </div>
+            </div>
+          </div>
+
+          <div>
+
+            <div class="ui segment">
+              <div class="ui container center aligned">
+                <h1 class="ui mini grey header" style="font-size: 20px;">Ongoing Challenge</h1>
+                {% if A == None %}
+                  <div class="ui large basic label center aligned" style="width: 50%;">NONE</div>
+                {% else %}
+                <div>
+                  <a style="font-size: 16px;" href="{% url 'person:challenge' slug=A.slug %}" class="ui large label">{{ A.name }}</a>
+                </div>
+                <div style="font-size: 17px; margin-top: 8%;"><b>Ends In</b></div>
+                <div style="font-size: 16px; margin-top: 3%;" class="value ui large basic label" id="countdown_ongoing">
+                </div>
+                <script type="text/javascript">
+                  $('#countdown_ongoing').countdown('{{ A.before_end }}', function(event) {
+                    $(this).html(event.strftime('%D days %H:%M:%S'));
+                    $(this).on('finish.countdown', function(){
+                      location.reload();
+                    });
+                  });
+                </script>
+                {% endif %}
+              </div>
+            </div>
+
+            <div class="ui segment">
+              <div class="ui container center aligned">
+                <h1 class="ui mini grey header" style="font-size: 20px;">Upcoming Challenge</h1>
+                {% if B == None %}
+                  <div class="ui large basic label center aligned" style="width: 50%;">NONE</div>
+                {% else %}
+                <div>
+                  <a style="font-size: 16px;" href="{% url 'person:challenge' slug=B.slug %}" class="ui large label">{{ B.name }}</a>
+                </div>
+                <div style="font-size: 17px; margin-top: 8%;"><b>Before Start</b></div>
+                <div style="font-size: 16px; margin-top: 3%;" class="value ui large basic label" id="countdown_upcoming">
+                </div>
+
+                <script type="text/javascript">
+                  $('#countdown_upcoming').countdown('{{ B.before_start }}', function(event) {
+                    $(this).html(event.strftime('%D days %H:%M:%S'));
+                    $(this).on('finish.countdown', function(){
+                      location.reload();
+                    });
+                  });
+                </script>
+                {% endif %}
+              </div>
+            </div>
+
+          <div class="ui segment">
+            <div class="ui container centre aligned">
+              <h1 class="ui mini grey header" style="font-size: 20px;">Random Question</h1>
+              <div><a href="{% url 'person:random_question' %}" class="ui green large label" style="margin-top: 1.5%; width: 40%; font-size: 14px;">SOLVE</a></div>
+            </div>
+          </div>
+
+        </div>
+
+
+        </div>
+
+        {% if valid == 1 %}
+
+          {% if user_type == 'user' %}
+            <div class="ui container" style="width:40%;">
+            {% if rank > 0 %}
+            <div class="ui small statistic">
+                  <div class="value">
+                    {{ rank }}
+                  </div>
+                  <div class="label">
+                    Your Rank
+                  </div>
+            </div>
+            {% elif rank == -1 %}
+              <div class="ui positive message">You did not take part in this contest</div>
+            {% endif %}
+          </div>
+          {% endif %}
+
+          <div class="ui segment" style="width:100%; min-height: 800px;">
+            <div>
+              <label class="ui large header">LEADERBOARD</label>
+            </div>
+            <div style="margin-top: 2%;">
+
+              <table id="datatable" class="ui table center aligned" style="width: 225%;">
+
+                <thead>
+                  <tr>
+                    <th style="width:15%;">RANK</th>
+                    <th>Username</th>
+                    <th>Questions Attempted</th>
+                    <th>Score</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {% for users in leader %}
+
+                  <tr>
+                    <td> {{ users.rank }}  </td>
+                    <td> {{ users.username }} </td>
+                    <td> {{ users.attempted }} </td>
+                    <td> {{ users.score }} </td>
+                  </tr>
+
+                  {% endfor %}
+                </tbody>
+
+              </table>
+
+            </div>
+          </div>
+
+          {% elif valid == 0 %}
+
+            <div class="ui center aligned container segment">
+              <div class="ui huge info floating message">This challenge had no participants</div>
+            </div>
+
+          {% endif %}
+
+      </div>
+
+
+{% endblock %}
