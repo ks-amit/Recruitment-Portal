@@ -1,19 +1,19 @@
 # RECRUITMENT PORTAL
 
-	Practice problems
-	Participate in contests
-	Create questions
-	Host contests
+	* Practice problems
+	* Participate in contests
+	* Create questions
+	* Host contests
 	
 # Key features
 
-	Authentication System - Login, Signup, Recovery, Email verification
-	Mailing Service
-	3 user types - Standard, Setter, Admin
-	Problemset - Questions available for practice
-	Arena - Upcoming and Ongoing contests
-	Setter Portal - Apply to be a problem setter / host and manage contests. 
-	Admin Portal - Manage all contests and setter applications
+	* Authentication System - Login, Signup, Recovery, Email verification
+	* Mailing Service
+	* 3 user types - Standard, Setter, Admin
+	* Problemset - Questions available for practice
+	* Arena - Upcoming and Ongoing contests
+	* Setter Portal - Apply to be a problem setter / host and manage contests. 
+	* Admin Portal - Manage all contests and setter applications
 	
 # Snapshots
 
