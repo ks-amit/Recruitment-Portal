@@ -47,11 +47,20 @@
 
 	Password for all users: 123456
 
-# SUPERUSER LOGIN CREDENTIALS 
+# Superuser credentials
 `localhost:8000/admin`
 
 	1. dumbape
 
 	Password: qwertyuiop
+	
+Alternatively, you may create a superuser using `python manage.py createsuperuser` and login using the new one too.
+
+# Tools used
+
+1. FrontEnd - HTML, CSS, JavaScript, JQuery
+2. CSS Framework - Semantic UI
+3. BackEnd - Python Django
+4. Database - SQLite 3
 
 	
