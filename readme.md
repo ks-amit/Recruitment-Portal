@@ -1,11 +1,25 @@
 # RECRUITMENT PORTAL
 
-	1. Practice problems
-	2. Participate in contests
-	3. Create questions
-	4. Host contests
+	Practice problems
+	Participate in contests
+	Create questions
+	Host contests
+	
+# Key features
 
-# INSTALLATION INSTRUCTIONS
+	Authentication System - Login, Signup, Recovery, Email verification
+	Mailing Service
+	3 user types - Standard, Setter, Admin
+	Problemset - Questions available for practice
+	Arena - Upcoming and Ongoing contests
+	Setter Portal - Apply to be a problem setter / host and manage contests. 
+	Admin Portal - Manage all contests and setter applications
+	
+# Snapshots
+
+
+
+# Install
 
 1. Make sure to have pip installed. Install pip using: `sudo apt-get install pip`
 2. (Optional) Switch to a virtual environment if you wish not to install required packages globally.
@@ -13,9 +27,9 @@
 4. After installing the packages, run the command: `python manage.py runserver`
 5. Open the browser, goto the address: localhost:8000/
 6. You may create a new account or login using an existing one (credentials are given below)
-7. Goto the address: localhost:8000/admin and login with superuser credentials to change the user types for testing the software.
+7. Goto the address: localhost:8000/admin and login with superuser credentials to change the user types to test the software.
 
-# USER LOGIN CREDENTIALS 
+# Credentials
 `localhost:8000/login`
 
 	1. dumbape
