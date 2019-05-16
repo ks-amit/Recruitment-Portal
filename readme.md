@@ -1,3 +1,10 @@
+# RECRUITMENT PORTAL
+
+	1. Practice problems
+	2. Participate in contests
+	3. Create questions
+	4. Host contests
+
 # INSTALLATION INSTRUCTIONS
 
 1. Make sure to have pip installed. Install pip using: `sudo apt-get install pip`
